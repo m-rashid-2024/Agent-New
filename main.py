@@ -743,6 +743,43 @@ def get_household_management(firstname: str, lastname: str) -> str:
     return "No household_management found"
 
   return household_management
+    
+
+def get_accident_report(firstname: str, lastname: str) -> str:
+  """
+  Gibt das Sturzprotokoll zu einer Person zurück
+
+  Args:
+    firstname: Vorname des Klienten
+    lastname: Nachname des Klienten
+
+  Returns:
+    str: Sturzprotokoll Information zur Person
+  """
+
+  log.debug("get_accident_report function called with: " + firstname + " " + lastname + "")
+
+  client_id = get_client_id(firstname, lastname)
+  document_id = get_client_document_id(client_id, 'STURZPROTOKOLL')
+
+  token = get_access_token()
+  headers = {"Authorization": "Bearer " + token}
+  data = requests.get("https://api.optadatacare.de/api/fe/sturzprotokoll/" + document_id, headers=headers)
+
+  if data.status_code != 200:
+    log.error("Error at api call - " + str(data.status_code) + " get_accident_report function called with: " + firstname + " " + lastname + "")
+    return "error at api call"
+
+  accident_report_info = json.loads(data.text)
+
+  report_info = ""
+  for content in accident_report_info.values():
+    if isinstance(content, dict):
+      for value in content:
+        if content[value] is None:
+          continue
+        report_info = report_info + "\n" + content[value] + "."
+  return report_info
 
 
 def agent(messages: list) -> list:

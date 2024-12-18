@@ -744,7 +744,7 @@ def get_household_management(firstname: str, lastname: str) -> str:
 
   return household_management
     
-
+# new function for accident report
 def get_accident_report(firstname: str, lastname: str) -> str:
   """
   Gibt das Sturzprotokoll zu einer Person zurück
@@ -772,6 +772,7 @@ def get_accident_report(firstname: str, lastname: str) -> str:
 
   accident_report_info = json.loads(data.text)
 
+# type Dictionary
   report_info = ""
   for content in accident_report_info.values():
     if isinstance(content, dict):
